@@ -24,6 +24,30 @@ func (m *Matrix) RandomFill() {
 	}
 }
 
+func (m *Matrix) Add(a int) {
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] += a
+		}
+	}
+}
+
+func (m *Matrix) Sub(a int) {
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] -= a
+		}
+	}
+}
+
+func (m *Matrix) Mul(a int) {
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] *= a
+		}
+	}
+}
+
 func (m *Matrix) AddMat(m2 *Matrix) error {
 	if m.rows != m2.rows {
 		return fmt.Errorf("number of rows don't match")
@@ -34,6 +58,21 @@ func (m *Matrix) AddMat(m2 *Matrix) error {
 	for i := 0; i < m.rows; i++ {
 		for j := 0; j < m.cols; j++ {
 			m.val[i][j] += m2.val[i][j]
+		}
+	}
+	return nil
+}
+
+func (m *Matrix) SubMat(m2 *Matrix) error {
+	if m.rows != m2.rows {
+		return fmt.Errorf("number of rows don't match")
+	}
+	if m.cols != m2.cols {
+		return fmt.Errorf("number of cols don't match")
+	}
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] -= m2.val[i][j]
 		}
 	}
 	return nil

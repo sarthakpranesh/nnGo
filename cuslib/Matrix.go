@@ -65,3 +65,20 @@ func (m *Matrix) Show() {
 	}
 	fmt.Printf(formatted)
 }
+
+func (m *Matrix) Transpose() error {
+	if m.cols != m.rows {
+		return fmt.Errorf("number of rows (%v) is not equal to number of columns (%v)", m.rows, m.cols)
+	}
+	tmp := make([][]int, m.cols)
+	for i := 0; i < m.cols; i++ {
+		tmp[i] = make([]int, m.rows)
+	}
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			tmp[i][j] = m.val[j][i]
+		}
+	}
+	m.val = tmp
+	return nil
+}

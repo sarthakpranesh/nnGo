@@ -5,10 +5,8 @@ import (
 )
 
 func main() {
-	m1 := cuslib.NewMatrix([][]int{{2, 2}, {2, 2}, {2, 2}, {2, 2}})
-	m1.Show()
-	m2 := cuslib.NewMatrix([][]int{{1, 1}, {2, 2}, {3, 3}, {4, 4}})
-	m2.Show()
-	m1.SubMat(m2)
-	m1.Show()
+	nn1 := cuslib.NewNN(2, 1, 3, 1.6, "sgd")
+	input := cuslib.NewMatrix([][]float64{{1, 1}, {1, 0}, {0, 1}, {0, 0}})
+	input.Show()
+	nn1.Train(input)
 }

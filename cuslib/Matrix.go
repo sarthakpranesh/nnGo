@@ -56,7 +56,7 @@ func (m *Matrix) MulMat(m2 *Matrix) error {
 
 func (m *Matrix) Show() {
 	var formatted string
-	formatted += "Matrix -> \n"
+	formatted += "Matrix -> Dim: {" + strconv.Itoa(m.rows) + ", " + strconv.Itoa(m.cols) + "}  \n"
 	for i := 0; i < m.rows; i++ {
 		for j := 0; j < m.cols; j++ {
 			formatted += "\t" + strconv.Itoa(m.val[i][j])
@@ -67,18 +67,22 @@ func (m *Matrix) Show() {
 }
 
 func (m *Matrix) Transpose() error {
-	if m.cols != m.rows {
-		return fmt.Errorf("number of rows (%v) is not equal to number of columns (%v)", m.rows, m.cols)
+	r := m.rows
+	c := m.cols
+	//if r != c {
+	//	return fmt.Errorf("number of rows (%v) is not equal to number of columns (%v)", m.rows, m.cols)
+	//}
+	tmp := make([][]int, c)
+	for i := 0; i < c; i++ {
+		tmp[i] = make([]int, r)
 	}
-	tmp := make([][]int, m.cols)
-	for i := 0; i < m.cols; i++ {
-		tmp[i] = make([]int, m.rows)
-	}
-	for i := 0; i < m.rows; i++ {
-		for j := 0; j < m.cols; j++ {
-			tmp[i][j] = m.val[j][i]
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			tmp[j][i] = m.val[i][j]
 		}
 	}
+	m.rows = c
+	m.cols = r
 	m.val = tmp
 	return nil
 }

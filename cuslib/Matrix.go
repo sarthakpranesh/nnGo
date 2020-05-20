@@ -121,3 +121,28 @@ func (m *Matrix) Transpose() {
 	m.cols = r
 	m.val = tmp
 }
+
+func (m *Matrix) MatrixProduct(m2 Matrix) (*Matrix, error) {
+	if m.cols != m2.rows {
+		return &Matrix{}, fmt.Errorf("matrix product not possible")
+	}
+	tmp := make([][]int, m.rows)
+	for i := 0; i < m.rows; i++ {
+		tmp[i] = make([]int, m2.cols)
+	}
+	m2.Transpose()
+	for i, arr1 := range m.val {
+		for j, arr2 := range m2.val {
+			var sum int
+			for k := 0; k < len(arr2); k++ {
+				sum += arr1[k]*arr2[k]
+			}
+			tmp[i][j] = sum
+		}
+	}
+	return &Matrix{
+		rows: m.rows,
+		cols: m2.rows, // this will not be m2.cols because we transposed m2 earlier
+		val:  tmp,
+	}, nil
+}

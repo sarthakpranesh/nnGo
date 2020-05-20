@@ -19,7 +19,7 @@ func NewMatrix(arr [][]int) *Matrix {
 func (m *Matrix) RandomFill() {
 	for i := 0; i < len(m.val); i++ {
 		for j := 0; j < len(m.val[0]); j++ {
-			m.val[i][j] = rand.Int()
+			m.val[i][j] = rand.Intn(10)
 		}
 	}
 }
@@ -66,12 +66,9 @@ func (m *Matrix) Show() {
 	fmt.Printf(formatted)
 }
 
-func (m *Matrix) Transpose() error {
+func (m *Matrix) Transpose() {
 	r := m.rows
 	c := m.cols
-	//if r != c {
-	//	return fmt.Errorf("number of rows (%v) is not equal to number of columns (%v)", m.rows, m.cols)
-	//}
 	tmp := make([][]int, c)
 	for i := 0; i < c; i++ {
 		tmp[i] = make([]int, r)
@@ -84,5 +81,4 @@ func (m *Matrix) Transpose() error {
 	m.rows = c
 	m.cols = r
 	m.val = tmp
-	return nil
 }

@@ -22,7 +22,7 @@ func main() {
 		The Neural Network is essentially a three fully connected
 		layer network ( did not have the will to sit and code for
 		more dynamically given layer numbers ). You can read more
-		about it in "./cuslib/nn.go"
+		about it in "./cuslib/NN.go"
 	*/
 	nn := cuslib.NewNN(2, 10, 1, 1, "sgd", 500)
 	nn.Train(input, target)

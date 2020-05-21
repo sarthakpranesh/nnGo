@@ -109,9 +109,14 @@
     - `Map` - method on Matrix struct, takes in a function which operates on float64 and applies it 
     to all elements in the matrix
     - `Show` - method on Matrix struct that displays the matrix in the terminal in a convenient manner
-
-` Their are more functions present in Matrix implementation that I have not documented here to keep this short.
-So please go through the Matrix.go file for learning more about Matrix functions that are implemented.`
+    - `MatrixSum` - function takes in a Matrix and returns the sum of its elements
+    - `MatrixAdd` - function takes in two Matrices and returns the element wise added Matrix
+    - `MatrixSub` - function takes in two Matrices and returns the difference Matrix of the two Matrices
+    - `MatrixMul` - function takes in two Matrices and returns the element wise multiplied Matrix
+    - `MatrixProduct` - function takes in two Matrices and returns there Matrix product
+    - `MatrixTranspose` - function takes in a Matrix and returns a transposed Matrix
+    - `MatrixMap` - function takes in a Matrix and a function that operates on float64, returns a Matrix whose
+    elements belong to the passed matrix but are processed with the function passed
 
 ## Looking for help
 <p>

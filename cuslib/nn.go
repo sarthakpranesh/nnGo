@@ -56,18 +56,59 @@ func NewNN(inputNodes, outputNodes, hiddenNodes int, learningRate float64, activ
 	}
 }
 
-func (nn *NeuralNetwork) Train(input Matrix) {
+func (nn *NeuralNetwork) Train(input Matrix, target Matrix) {
 	nn.weightsIH.RandomFill()
 	nn.weightsHO.RandomFill()
-	nn.weightsIH.Show()
 	h1, err := MatrixProduct(input, nn.weightsIH)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	h1.Add(nn.biasIH)
-	h1.Show()
 	h1.Map(nn.activationFunc.f)
-	h1.Show()
+
+	o1, err2 := MatrixProduct(h1, nn.weightsHO)
+	if err2 != nil {
+		fmt.Println(err)
+		return
+	}
+	errors, err3 := MatrixSub(target, o1)
+	if err3 != nil {
+		fmt.Println(err3)
+		return
+	}
+	errors.Show()
+	o1.Map(nn.activationFunc.df)
+	o1.MulMat(errors)
+	o1.Mul(nn.learningRate)
+
+	// calculating delta
+	h1T := MatrixTranspose(h1)
+	weightDeltaHO, err4 := MatrixProduct(h1T, o1)
+	if err4 != nil {
+		fmt.Println(err)
+		return
+	}
+	nn.weightsHO.AddMat(weightDeltaHO)
+
+	// hidden layer error
+	weightHOT := MatrixTranspose(nn.weightsHO)
+	hiddenErrors, err5 := MatrixProduct(weightHOT, errors)
+	if err5 != nil {
+		fmt.Println(err5)
+		return
+	}
+
+	h1.Map(nn.activationFunc.df)
+	h1.MulMat(hiddenErrors)
+	h1.Mul(nn.learningRate)
+
+	inputT := MatrixTranspose(input)
+	weightDeltaIH, err6 := MatrixProduct(h1, inputT)
+	if err6 != nil {
+		fmt.Println(err6)
+		return
+	}
+	nn.weightsIH.AddMat(weightDeltaIH)
 }
 

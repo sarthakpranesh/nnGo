@@ -12,6 +12,9 @@ type Matrix struct {
 	val		[][]float64
 }
 
+/*
+	Initializers for Matrix Struct
+*/
 func NewMatrix(arr [][]float64) Matrix {
 	return Matrix{len(arr), len(arr[0]), arr}
 }
@@ -27,6 +30,16 @@ func NewZeros(rows, cols int) Matrix {
 		val:  tmp,
 	}
 }
+
+func NewRandom(rows, cols int) Matrix {
+	m := NewZeros(rows, cols)
+	m.RandomFill()
+	return m
+}
+
+/*
+	Methods for Matrix Struct
+*/
 
 func (m *Matrix) RandomFill() {
 	for i := 0; i < len(m.val); i++ {
@@ -60,51 +73,6 @@ func (m *Matrix) Mul(a float64) {
 	}
 }
 
-func (m *Matrix) AddMat(m2 *Matrix) error {
-	if m.rows != m2.rows {
-		return fmt.Errorf("number of rows don't match")
-	}
-	if m.cols != m2.cols {
-		return fmt.Errorf("number of cols don't match")
-	}
-	for i := 0; i < m.rows; i++ {
-		for j := 0; j < m.cols; j++ {
-			m.val[i][j] += m2.val[i][j]
-		}
-	}
-	return nil
-}
-
-func (m *Matrix) SubMat(m2 *Matrix) error {
-	if m.rows != m2.rows {
-		return fmt.Errorf("number of rows don't match")
-	}
-	if m.cols != m2.cols {
-		return fmt.Errorf("number of cols don't match")
-	}
-	for i := 0; i < m.rows; i++ {
-		for j := 0; j < m.cols; j++ {
-			m.val[i][j] -= m2.val[i][j]
-		}
-	}
-	return nil
-}
-
-func (m *Matrix) MulMat(m2 *Matrix) error {
-	if m.rows != m2.rows {
-		return fmt.Errorf("number of rows don't match")
-	}
-	if m.cols != m2.cols {
-		return fmt.Errorf("number of cols don't match")
-	}
-	for i := 0; i < m.rows; i++ {
-		for j := 0; j < m.cols; j++ {
-			m.val[i][j] *= m2.val[i][j]
-		}
-	}
-	return nil
-}
-
 func (m *Matrix) Show() {
 	var formatted string
 	formatted += "Matrix -> Dim: {" + strconv.Itoa(m.rows) + ", " + strconv.Itoa(m.cols) + "}  \n"
@@ -134,6 +102,51 @@ func (m *Matrix) Transpose() {
 	m.val = tmp
 }
 
+func (m *Matrix) AddMat(m2 Matrix) error {
+	if m.rows != m2.rows {
+		return fmt.Errorf("number of rows don't match")
+	}
+	if m.cols != m2.cols {
+		return fmt.Errorf("number of cols don't match")
+	}
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] += m2.val[i][j]
+		}
+	}
+	return nil
+}
+
+func (m *Matrix) SubMat(m2 Matrix) error {
+	if m.rows != m2.rows {
+		return fmt.Errorf("number of rows don't match")
+	}
+	if m.cols != m2.cols {
+		return fmt.Errorf("number of cols don't match")
+	}
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] -= m2.val[i][j]
+		}
+	}
+	return nil
+}
+
+func (m *Matrix) MulMat(m2 Matrix) error {
+	if m.rows != m2.rows {
+		return fmt.Errorf("number of rows don't match")
+	}
+	if m.cols != m2.cols {
+		return fmt.Errorf("number of cols don't match")
+	}
+	for i := 0; i < m.rows; i++ {
+		for j := 0; j < m.cols; j++ {
+			m.val[i][j] *= m2.val[i][j]
+		}
+	}
+	return nil
+}
+
 func (m *Matrix) Map(mapFunc func(x float64) float64) {
 	for i, arr1 := range m.val {
 		for j, ele := range arr1 {
@@ -142,9 +155,47 @@ func (m *Matrix) Map(mapFunc func(x float64) float64) {
 	}
 }
 
-func MatrixProduct(m Matrix, m2 Matrix) (*Matrix, error) {
+/*
+	Functions that operate on two Matrices struct
+*/
+
+func MatrixSum(m Matrix) float64 {
+	var sum float64
+	for _, arr1 := range m.val {
+		 for _, ele := range arr1 {
+		 	sum += ele
+		 }
+	}
+	return  sum
+}
+
+func MatrixAdd(m Matrix, m2 Matrix) (Matrix, error) {
+	err := m.AddMat(m2)
+	if err != nil {
+		return Matrix{}, err
+	}
+	return m, nil
+}
+
+func MatrixSub(m Matrix, m2 Matrix) (Matrix, error) {
+	err := m.SubMat(m2)
+	if err != nil {
+		return Matrix{}, err
+	}
+	return m, nil
+}
+
+func MatrixMul(m Matrix, m2 Matrix) (Matrix, error) {
+	err := m.MulMat(m2)
+	if err != nil {
+		return Matrix{}, err
+	}
+	return m, nil
+}
+
+func MatrixProduct(m Matrix, m2 Matrix) (Matrix, error) {
 	if m.cols != m2.rows {
-		return &Matrix{}, fmt.Errorf("matrix product not possible")
+		return Matrix{}, fmt.Errorf("matrix product not possible")
 	}
 	tmp := make([][]float64, m.rows)
 	for i := 0; i < m.rows; i++ {
@@ -160,9 +211,28 @@ func MatrixProduct(m Matrix, m2 Matrix) (*Matrix, error) {
 			tmp[i][j] = sum
 		}
 	}
-	return &Matrix{
+	return Matrix{
 		rows: m.rows,
 		cols: m2.rows, // this will not be m2.cols because we transposed m2 earlier
 		val:  tmp,
 	}, nil
+}
+
+func MatrixTranspose(m Matrix) Matrix {
+	r := m.rows
+	c := m.cols
+	tmp := make([][]float64, c)
+	for i := 0; i < c; i++ {
+		tmp[i] = make([]float64, r)
+	}
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			tmp[j][i] = m.val[i][j]
+		}
+	}
+	return Matrix{
+		rows: r,
+		cols: c,
+		val:  tmp,
+	}
 }

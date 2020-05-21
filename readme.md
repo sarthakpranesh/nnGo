@@ -117,6 +117,6 @@ So please go through the Matrix.go file for learning more about Matrix functions
 <p>
     Currently I only have one example ( XOR example ) implemented using this library and only one activation function supported.
     I would love if anyone of you can help me by implementing more examples or define different activation functions in 
-    this Toy library. Also looking for improving the existing code quality ( I am still young with GO :( ). 
+    this Toy library. Also looking for improving the existing code quality. 
 </p>
     

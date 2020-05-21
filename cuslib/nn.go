@@ -59,6 +59,7 @@ func NewNN(inputNodes, outputNodes, hiddenNodes int, learningRate float64, activ
 func (nn *NeuralNetwork) Train(input Matrix, target Matrix) {
 	nn.weightsIH.RandomFill()
 	nn.weightsHO.RandomFill()
+	lengthInout := len(input.val)
 	h1, err := MatrixProduct(input, nn.weightsIH)
 	if err != nil {
 		fmt.Println(err)

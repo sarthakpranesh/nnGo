@@ -236,3 +236,8 @@ func MatrixTranspose(m Matrix) Matrix {
 		val:  tmp,
 	}
 }
+
+func MatrixMap(m Matrix, f func(x float64) float64) Matrix {
+	m.Map(f)
+	return m
+}

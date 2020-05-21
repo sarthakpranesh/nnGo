@@ -3,7 +3,6 @@ package cuslib
 import (
 	"fmt"
 	"math"
-	"math/rand"
 )
 
 type Activation struct {
@@ -19,13 +18,16 @@ type NeuralNetwork struct {
 	weightsIH			Matrix	// weights from input to hidden layer
 	weightsHO			Matrix	// weights from hidden to output layer
 
-	biasIH				float64
-	biasHO				float64
+	biasIH				Matrix
+	biasHO				Matrix
 
 	learningRate		float64
 	activationFunc		*Activation // lol super shady
 }
 
+/*
+	Different activation functions
+*/
 func newSigmoid() *Activation {
 	return &Activation{
 		f: func(x float64) float64 {
@@ -37,7 +39,7 @@ func newSigmoid() *Activation {
 	}
 }
 
-func NewNN(inputNodes, outputNodes, hiddenNodes int, learningRate float64, activationFunc string) *NeuralNetwork {
+func NewNN(inputNodes, hiddenNodes, outputNodes int, learningRate float64, activationFunc string) *NeuralNetwork {
 	var actFunc *Activation
 	if activationFunc == "sigmoid" || activationFunc == "sgd" {
 		actFunc = newSigmoid()
@@ -47,69 +49,66 @@ func NewNN(inputNodes, outputNodes, hiddenNodes int, learningRate float64, activ
 		numInputNodes:  inputNodes,
 		numOutputNodes: outputNodes,
 		numHiddenNodes: hiddenNodes,
-		weightsIH:      NewZeros(inputNodes, hiddenNodes),
-		weightsHO:      NewZeros(hiddenNodes, outputNodes),
-		biasIH:         rand.Float64(),
-		biasHO:         rand.Float64(),
+		weightsIH:      NewRandom(hiddenNodes, inputNodes),
+		weightsHO:      NewRandom(outputNodes, hiddenNodes),
+		biasIH:         NewRandom(hiddenNodes, 1),
+		biasHO:         NewRandom(outputNodes, 1),
 		learningRate:   learningRate,
 		activationFunc: actFunc,
 	}
 }
 
-func (nn *NeuralNetwork) Train(input Matrix, target Matrix) {
-	nn.weightsIH.RandomFill()
-	nn.weightsHO.RandomFill()
-	lengthInout := len(input.val)
-	h1, err := MatrixProduct(input, nn.weightsIH)
+func (n *NeuralNetwork) FeedForward(input []float64) Matrix{
+	inputMatrix := NewColMatrix(input)
+
+	// Calculate value of hidden nodes
+	hidden, err := MatrixProduct(n.weightsIH, inputMatrix)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return Matrix{}
 	}
-	h1.Add(nn.biasIH)
-	h1.Map(nn.activationFunc.f)
+	hidden.Map(n.activationFunc.f)
 
-	o1, err2 := MatrixProduct(h1, nn.weightsHO)
+	// Calculate values of output nodes
+	output, err2 := MatrixProduct(n.weightsHO, hidden)
 	if err2 != nil {
-		fmt.Println(err)
-		return
+		fmt.Println("Error: ", err2)
+		return Matrix{}
 	}
-	errors, err3 := MatrixSub(target, o1)
-	if err3 != nil {
-		fmt.Println(err3)
-		return
-	}
-	errors.Show()
-	o1.Map(nn.activationFunc.df)
-	o1.MulMat(errors)
-	o1.Mul(nn.learningRate)
+	output.Map(n.activationFunc.f)
+	return output
+}
 
-	// calculating delta
-	h1T := MatrixTranspose(h1)
-	weightDeltaHO, err4 := MatrixProduct(h1T, o1)
-	if err4 != nil {
-		fmt.Println(err)
-		return
-	}
-	nn.weightsHO.AddMat(weightDeltaHO)
+func (n *NeuralNetwork) BackPropagation(input []float64) {
 
-	// hidden layer error
-	weightHOT := MatrixTranspose(nn.weightsHO)
-	hiddenErrors, err5 := MatrixProduct(weightHOT, errors)
-	if err5 != nil {
-		fmt.Println(err5)
-		return
-	}
+}
 
-	h1.Map(nn.activationFunc.df)
-	h1.MulMat(hiddenErrors)
-	h1.Mul(nn.learningRate)
+func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
+	for i, arr := range input {
+		output := n.FeedForward(arr)
 
-	inputT := MatrixTranspose(input)
-	weightDeltaIH, err6 := MatrixProduct(h1, inputT)
-	if err6 != nil {
-		fmt.Println(err6)
-		return
+		/*
+			Calculate the output error
+			Error = target - output
+		*/
+		target := NewColMatrix(t[i])
+		errorOutput, err := MatrixSub(target, output)
+		if err != nil {
+			fmt.Println("Error: ", err)
+			return
+		}
+
+		/*
+			Calculate hidden error
+			Error = transpose(weightHO)*errorOutput
+		*/
+		weightsHOT := MatrixTranspose(n.weightsHO)
+		errorHidden, err2 := MatrixProduct(weightsHOT, errorOutput)
+		if err2 != nil {
+			fmt.Println("Error: ", err2)
+			return
+		}
+		errorHidden.Show()
 	}
-	nn.weightsIH.AddMat(weightDeltaIH)
 }
 

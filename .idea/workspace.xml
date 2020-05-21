@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6af7e409-7e67-44e9-bb50-e170c3aa9966" name="Default Changelist" comment="" />
+    <list default="true" id="6af7e409-7e67-44e9-bb50-e170c3aa9966" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cuslib/Matrix.go" beforeDir="false" afterPath="$PROJECT_DIR$/cuslib/Matrix.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cuslib/nn.go" beforeDir="false" afterPath="$PROJECT_DIR$/cuslib/nn.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,9 +57,9 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="623" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1589973833959">
+    <state x="623" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1590047707318">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1589973833959" />
+    <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1590047707318" />
   </component>
 </project>

@@ -12,8 +12,7 @@
 ## Setting It Up
 1. git clone https://github.com/sarthakpranesh/nnGo.git
 2. cd nnGo
-3. That's it hurray! You can use the main.go as a playground to test the library out!!!
- There is also a XOR example that pre-exists in that file to help you out.
+3. That's it hurray! You can checkout the `examples` subdirectory as a playground to test the library out!!!
  
  ## About library
  The `cuslib` folder in this repo holds two files, Matrix.go and NN.go. Matrix.go contains all required 
@@ -44,8 +43,7 @@
         ``` 
     - `NewNN` - takes in six arguments as the following: (number_of_input_nodes int, number_of_hidden_nodes int, 
     number_of_output_nodes int, learning_rate float64, activation_func_name string, epochs int).
-    Returns a NeuralNetwork struct. The only activation function supported right now is the `sigmoid` function, 
-    which can be selected using the string "sigmoid" or "sgd".
+    Returns a NeuralNetwork struct. The activation functions supported right now are the `sigmoid` and `tanh` function.
          ```go
         eg:-
         nn := cuslib.NewNN(2, 10, 1, 1, "sgd", 500)
@@ -120,7 +118,7 @@
 
 ## Looking for help
 <p>
-    Currently I only have one example ( XOR example ) implemented using this library and only one activation function supported.
+    Currently I only have one example ( XOR example, mnist example is work in progress ) implemented using this library and only two activation function supported.
     I would love if anyone of you can help me by implementing more examples or define different activation functions in 
     this Toy library. Also looking for improving the existing code quality. 
 </p>

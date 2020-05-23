@@ -2,13 +2,7 @@ package cuslib
 
 import (
 	"fmt"
-	"math"
 )
-
-type Activation struct {
-	f		func(x float64) float64
-	df		func(y float64) float64
-}
 
 type NeuralNetwork struct {
 	numInputNodes		int
@@ -27,23 +21,14 @@ type NeuralNetwork struct {
 	epochs				int // num of epochs to loop
 }
 
-/*
-	Different activation functions
-*/
-func newSigmoid() *Activation {
-	return &Activation{
-		f: func(x float64) float64 {
-			return 1 / ( 1 + math.Exp(-x) )
-		},
-		df: func(y float64) float64 {
-			return y * (1 - y)
-		},
-	}
-}
-
 func NewNN(inputNodes, hiddenNodes, outputNodes int, learningRate float64, activationFunc string, e int) *NeuralNetwork {
 	var actFunc *Activation
 	if activationFunc == "sigmoid" || activationFunc == "sgd" {
+		actFunc = newSigmoid()
+	} else if activationFunc == "tanh" {
+		actFunc = newTanh()
+	} else {
+		fmt.Println("Unsupported activation function or no activation function passed: Defaulting to `SIGMOID`")
 		actFunc = newSigmoid()
 	}
 
@@ -63,7 +48,8 @@ func NewNN(inputNodes, hiddenNodes, outputNodes int, learningRate float64, activ
 
 func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
 	for i := 0; i < n.epochs; i++ {
-		fmt.Printf("Epoch %v\n", i+1)
+		var errorSum float64
+		fmt.Printf("Epoch %v: ", i+1)
 		for i, arr := range input {
 			inputMatrix := NewColMatrix(arr)
 
@@ -93,6 +79,9 @@ func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
 				fmt.Println("Error: ", err)
 				return
 			}
+
+			// storing errorOutput
+			errorSum += MatrixAve(errorOutput)
 
 			// We have errorOutput need to calculate gradient
 			// calculate grads for output
@@ -136,6 +125,7 @@ func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
 			n.weightsIH.AddMat(weightsIHDelta) // update the weightsIH
 			n.biasIH.AddMat(hiddenGradient)    // updating the bias
 		}
+		fmt.Printf("Error = %v\n", errorSum / float64(len(input)))
 	}
 }
 

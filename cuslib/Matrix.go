@@ -238,3 +238,7 @@ func MatrixMap(m Matrix, f func(x float64) float64) Matrix {
 	m.Map(f)
 	return m
 }
+
+func MatrixAve(m Matrix) float64 {
+	return MatrixSum(m)/float64(m.rows * m.cols)
+}

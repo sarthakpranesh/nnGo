@@ -56,7 +56,7 @@ func NewRandom(rows, cols int) Matrix {
 func (m *Matrix) RandomFill() {
 	for i := 0; i < len(m.val); i++ {
 		for j := 0; j < len(m.val[0]); j++ {
-			m.val[i][j] = rand.Float64()
+			m.val[i][j] = rand.NormFloat64()
 		}
 	}
 }

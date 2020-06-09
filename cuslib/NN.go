@@ -129,14 +129,14 @@ func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
 	}
 }
 
-func (n *NeuralNetwork) Predict(input []float64) {
+func (n *NeuralNetwork) Predict(input []float64) [][] float64 {
 	inputMatrix := NewColMatrix(input)
 
 	// Calculate value of hidden nodes
 	hidden, err := MatrixProduct(n.weightsIH, inputMatrix)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return [][]float64 {}
 	}
 	hidden.Map(n.activationFunc.f)
 
@@ -144,9 +144,26 @@ func (n *NeuralNetwork) Predict(input []float64) {
 	output, err2 := MatrixProduct(n.weightsHO, hidden)
 	if err2 != nil {
 		fmt.Println("Error: ", err2)
-		return
+		return [][]float64 {}
 	}
 	output.Map(n.activationFunc.f)
-	output.Show()
+	//output.Show()
+	return output.val
+}
+
+func (n *NeuralNetwork) GeneMutate(mapping func(x float64) float64) *NeuralNetwork {
+	temp := &NeuralNetwork{
+		numInputNodes:  n.numInputNodes,
+		numOutputNodes: n.numOutputNodes,
+		numHiddenNodes: n.numHiddenNodes,
+		weightsIH:      MatrixMap(n.weightsIH, mapping),
+		weightsHO:      MatrixMap(n.weightsHO, mapping),
+		biasIH:         MatrixMap(n.biasIH, mapping),
+		biasHO:         MatrixMap(n.biasHO, mapping),
+		learningRate:   n.learningRate,
+		activationFunc: n.activationFunc,
+		epochs:         n.epochs,
+	}
+	return temp
 }
 

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/sarthakpranesh/percepGo/cuslib"
+import "github.com/sarthakpranesh/nnGo/cuslib"
 
 var (
 	input = [][]float64 {{1, 1}, {0, 1}, {0, 0}, {1, 0}}

@@ -63,6 +63,15 @@
         eg:-
         nn.Predict([]float64 {1, 1})
         ``` 
+    - `Mutate` - helper function that mutates the weight and bias matrices of passed in neural network
+        and returns it (Genetic Mutation). The mutation is carried out by applying the second argument passed that needs
+        to be a function taking in float64 value and returning a float64 value.
+        ```go
+        eg:-
+        Mutate(nn, func (x float64) float64 {
+              return x + rand.Normfloat()/10
+          })
+        ``` 
  
 - Matrix - generators and operations
     - Actual `Struct` - 
@@ -118,7 +127,7 @@
 
 ## Looking for help
 <p>
-    Currently I only have one example ( XOR example, mnist example is work in progress ) implemented using this library and only two activation function supported.
+    Currently I only have two example ( XOR , mnist ) implemented using this library and only two activation function supported.
     I would love if anyone of you can help me by implementing more examples or define different activation functions in 
     this Toy library. Also looking for improving the existing code quality. 
 </p>

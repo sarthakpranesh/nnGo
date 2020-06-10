@@ -30,7 +30,12 @@ var (
 func main() {
 	/*
 			-	-	-	mnist	-	-	-
-		WORK IN PROGRESS......
+		Make sure you download all four files from the below
+		URL and paste them as it is in the examples folder
+
+		mnist dataset - http://yann.lecun.com/exdb/mnist/
+
+		After doing the above you can successfully run: go run mnist.go
 	*/
 
 	// load in data

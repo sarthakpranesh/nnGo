@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6af7e409-7e67-44e9-bb50-e170c3aa9966" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/mnist.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/mnist.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/xor.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/xor.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cuslib/NN.go" beforeDir="false" afterPath="$PROJECT_DIR$/cuslib/NN.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +54,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../goJSCal" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
@@ -57,10 +75,22 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
-    <state x="770" y="311" width="424" height="491" key="FileChooserDialogImpl" timestamp="1591692593587">
-      <screen x="54" y="27" width="1866" height="1053" />
+    <state x="737" y="311" width="424" height="491" key="FileChooserDialogImpl" timestamp="1591721786728">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="737" y="311" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1591721786728" />
     <state x="770" y="311" width="424" height="491" key="FileChooserDialogImpl/54.27.1866.1053@54.27.1866.1053" timestamp="1591692593587" />
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1590047707318">
       <screen x="0" y="27" width="1920" height="1053" />

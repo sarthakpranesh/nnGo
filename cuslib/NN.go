@@ -147,23 +147,15 @@ func (n *NeuralNetwork) Predict(input []float64) [][] float64 {
 		return [][]float64 {}
 	}
 	output.Map(n.activationFunc.f)
-	//output.Show()
+	output.Show()
 	return output.val
 }
 
-func (n *NeuralNetwork) GeneMutate(mapping func(x float64) float64) *NeuralNetwork {
-	temp := &NeuralNetwork{
-		numInputNodes:  n.numInputNodes,
-		numOutputNodes: n.numOutputNodes,
-		numHiddenNodes: n.numHiddenNodes,
-		weightsIH:      MatrixMap(n.weightsIH, mapping),
-		weightsHO:      MatrixMap(n.weightsHO, mapping),
-		biasIH:         MatrixMap(n.biasIH, mapping),
-		biasHO:         MatrixMap(n.biasHO, mapping),
-		learningRate:   n.learningRate,
-		activationFunc: n.activationFunc,
-		epochs:         n.epochs,
-	}
-	return temp
+func Mutate(n NeuralNetwork, mapping func(x float64) float64) NeuralNetwork {
+	n.weightsIH.Map(mapping)
+	n.weightsHO.Map(mapping)
+	n.biasIH.Map(mapping)
+	n.biasHO.Map(mapping)
+	return n
 }
 

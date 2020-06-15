@@ -1,0 +1,4 @@
+github.com/moverest/mnist v0.0.0-20160628192128-ec5d9d203b59 h1:N7YMYr5dyVybP0kpmYrLWXpCX2W3ly1T1pflKQiaj7M=
+github.com/moverest/mnist v0.0.0-20160628192128-ec5d9d203b59/go.mod h1:QzlFfmUfh+Vs7ywNjNUNz6qyLx61b6AJWCGIXE7HKzM=
+github.com/sarthakpranesh/nnGo v0.0.0-20200610102600-2fa58d8a46af h1:iJObHZ76M9MBDxlyNn05pmTLg6jzG7S8+j+NGQJVCDc=
+github.com/sarthakpranesh/nnGo v0.0.0-20200610102600-2fa58d8a46af/go.mod h1:KJcTTwZ3HGEytJ98DpuqFsn3/gdT9xUAJOc3EOH88Us=

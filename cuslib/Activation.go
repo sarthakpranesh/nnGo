@@ -7,9 +7,7 @@ type Activation struct {
 	df		func(y float64) float64
 }
 
-/*
-	Different activation functions
-*/
+// Different activation functions
 func newSigmoid() *Activation {
 	return &Activation{
 		f: func(x float64) float64 {

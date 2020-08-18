@@ -4,6 +4,11 @@ import (
 	"fmt"
 )
 
+type Model interface {
+	Train(input [][]float64, t [][]float64)
+	Predict(input []float64)
+}
+
 type NeuralNetwork struct {
 	numInputNodes		int
 	numOutputNodes		int
@@ -16,18 +21,21 @@ type NeuralNetwork struct {
 	biasHO				Matrix
 
 	learningRate		float64
-	activationFunc		*Activation // lol super shady
+	activationFunc		*Activation
 
 	epochs				int // num of epochs to loop
 }
 
 func NewNN(inputNodes, hiddenNodes, outputNodes int, learningRate float64, activationFunc string, e int) *NeuralNetwork {
 	var actFunc *Activation
-	if activationFunc == "sigmoid" || activationFunc == "sgd" {
+	switch activationFunc {
+	case "sigmoid":
 		actFunc = newSigmoid()
-	} else if activationFunc == "tanh" {
+	case "sgd":
+		actFunc = newSigmoid()
+	case "tanh":
 		actFunc = newTanh()
-	} else {
+	default:
 		fmt.Println("Unsupported activation function or no activation function passed: Defaulting to `SIGMOID`")
 		actFunc = newSigmoid()
 	}

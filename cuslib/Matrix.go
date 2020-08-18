@@ -12,9 +12,7 @@ type Matrix struct {
 	val		[][]float64
 }
 
-/*
-	Initializers for Matrix Struct
-*/
+// Initializers for Matrix Struct
 func NewMatrix(arr [][]float64) Matrix {
 	return Matrix{len(arr), len(arr[0]), arr}
 }
@@ -50,9 +48,7 @@ func NewRandom(rows, cols int) Matrix {
 	return m
 }
 
-/*
-	Methods for Matrix Struct
-*/
+// Methods for Matrix Struct
 func (m *Matrix) RandomFill() {
 	for i := 0; i < len(m.val); i++ {
 		for j := 0; j < len(m.val[0]); j++ {
@@ -167,9 +163,7 @@ func (m *Matrix) Map(mapFunc func(x float64) float64) {
 	}
 }
 
-/*
-	Functions that operate on two Matrices struct
-*/
+// Functions that operate on two Matrices struct
 func MatrixSum(m Matrix) float64 {
 	var sum float64
 	for _, arr1 := range m.val {

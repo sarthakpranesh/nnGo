@@ -9,17 +9,23 @@
 ## Pre - Requisites
    Make sure you have `GO` Installed.
 
+<br />
+
 ## Setting It Up
 1. git clone https://github.com/sarthakpranesh/nnGo.git
 2. cd nnGo
 3. That's it hurray! You can checkout the `examples` subdirectory as a playground to test the library out!!!
+
+<br />
  
 ## About library
 The `nnGo` folder in this repo holds two files named, Matrix.go and NN.go. Matrix.go contains all required 
 components that should be there to generate and perform operations on Matrices, where as the NN.go file 
 contains code that utilizes the Matrix implementation to provide a 3 layered fully connected Neural Network.
 
-* [godoc.org]()
+* Documentation: [godoc](https://godoc.org/github.com/sarthakpranesh/nnGo/nnGo)
+
+<br />
  
 ## Looking for help
 <p>

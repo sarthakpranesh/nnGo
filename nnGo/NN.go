@@ -1,4 +1,4 @@
-package cuslib
+package nnGo
 
 import (
 	"fmt"

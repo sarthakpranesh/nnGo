@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/moverest/mnist"
-	"github.com/sarthakpranesh/nnGo/cuslib"
+	"github.com/sarthakpranesh/nnGo/nnGo"
 )
 
 const (

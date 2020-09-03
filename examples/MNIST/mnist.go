@@ -65,7 +65,7 @@ func main() {
 	}
 
 	// create and train neural network - HELP NEEDED
-	nn := cuslib.NewNN(Width*Height, 10000, 10, 0.001, "sgd", 10)
+	nn := nnGo.NewNN(Width*Height, 10000, 10, 0.001, "sgd", 10)
 	nn.Train(trainDataSet, targetDataSet)
 
 	// testing

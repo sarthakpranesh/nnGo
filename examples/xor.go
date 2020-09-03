@@ -22,7 +22,7 @@ func main() {
 		more dynamically given layer numbers ). You can read more
 		about it in "./cuslib/NN.go"
 	*/
-	nn := cuslib.NewNN(2, 10, 1, 1, "sgd", 500)
+	nn := nnGo.NewNN(2, 10, 1, 1, "sgd", 500)
 	nn.Train(input, target)
 	nn.Predict([]float64 {1, 1})
 	nn.Predict([]float64 {0, 1})

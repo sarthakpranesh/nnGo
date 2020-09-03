@@ -4,78 +4,85 @@ import (
 	"fmt"
 )
 
+// Model is a simple interface having two methods Train and Predict
 type Model interface {
 	Train(input [][]float64, t [][]float64)
 	Predict(input []float64)
 }
 
+// NeuralNetwork is a struct that contains all the values necessary to train a Neural Network model
 type NeuralNetwork struct {
-	numInputNodes		int
-	numOutputNodes		int
-	numHiddenNodes		int
+	NumInputNodes		int				// Num of input nodes on the Neural Network
+	NumOutputNodes		int				// Num of output nodes on the Neural Network
+	NumHiddenNodes		int				// Num of hidden nodes on the Neural Network
 
-	weightsIH			Matrix	// weights from input to hidden layer
-	weightsHO			Matrix	// weights from hidden to output layer
+	WeightsIH			Matrix			// weights from input to hidden layer
+	WeightsHO			Matrix			// weights from hidden to output layer
 
-	biasIH				Matrix
-	biasHO				Matrix
+	BiasIH				Matrix
+	BiasHO				Matrix
 
-	learningRate		float64
-	activationFunc		*Activation
+	LearningRate		float64			// Rate at which the Network would learn/fit data
+	ActivationFunc		*Activation		// Pointer to an Activation function	
 
-	epochs				int // num of epochs to loop
+	Epochs				int 			// num of Epochs to loop
 }
 
-func NewNN(inputNodes, hiddenNodes, outputNodes int, learningRate float64, activationFunc string, e int) *NeuralNetwork {
+// NewNN creates and returns a pointers to a NeuralNetwork
+func NewNN(inputNodes, hiddenNodes, outputNodes int, LearningRate float64, ActivationFunc string, e int) *NeuralNetwork {
 	var actFunc *Activation
-	switch activationFunc {
+	switch ActivationFunc {
 	case "sigmoid":
-		actFunc = newSigmoid()
+		actFunc = NewSigmoid()
 	case "sgd":
-		actFunc = newSigmoid()
+		actFunc = NewSigmoid()
 	case "tanh":
-		actFunc = newTanh()
+		actFunc = NewTanh()
 	default:
 		fmt.Println("Unsupported activation function or no activation function passed: Defaulting to `SIGMOID`")
-		actFunc = newSigmoid()
+		actFunc = NewSigmoid()
 	}
 
 	return &NeuralNetwork{
-		numInputNodes:  inputNodes,
-		numOutputNodes: outputNodes,
-		numHiddenNodes: hiddenNodes,
-		weightsIH:      NewRandom(hiddenNodes, inputNodes),
-		weightsHO:      NewRandom(outputNodes, hiddenNodes),
-		biasIH:         NewRandom(hiddenNodes, 1),
-		biasHO:         NewRandom(outputNodes, 1),
-		learningRate:   learningRate,
-		activationFunc: actFunc,
-		epochs:			e,
+		NumInputNodes:  inputNodes,
+		NumOutputNodes: outputNodes,
+		NumHiddenNodes: hiddenNodes,
+		WeightsIH:      NewRandom(hiddenNodes, inputNodes),
+		WeightsHO:      NewRandom(outputNodes, hiddenNodes),
+		BiasIH:         NewRandom(hiddenNodes, 1),
+		BiasHO:         NewRandom(outputNodes, 1),
+		LearningRate:   LearningRate,
+		ActivationFunc: actFunc,
+		Epochs:			e,
 	}
 }
 
+// Train takes in two 2D arrays of type float64 and trains the 
+// NeuralNetwork to fit the data. One arguments should
+// be the input data to the Neural Network and another one should be
+// One Hot encoding of the actual category of the correspoding input data.
 func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
-	for i := 0; i < n.epochs; i++ {
+	for i := 0; i < n.Epochs; i++ {
 		var errorSum float64
 		fmt.Printf("Epoch %v: ", i+1)
 		for i, arr := range input {
 			inputMatrix := NewColMatrix(arr)
 
 			// Calculate value of hidden nodes
-			hidden, err := MatrixProduct(n.weightsIH, inputMatrix)
+			hidden, err := MatrixProduct(n.WeightsIH, inputMatrix)
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
-			hidden.Map(n.activationFunc.f)
+			hidden.Map(n.ActivationFunc.F)
 
 			// Calculate values of output nodes
-			output, err2 := MatrixProduct(n.weightsHO, hidden)
+			output, err2 := MatrixProduct(n.WeightsHO, hidden)
 			if err2 != nil {
 				fmt.Println("Error: ", err2)
 				return
 			}
-			output.Map(n.activationFunc.f)
+			output.Map(n.ActivationFunc.F)
 
 			/*
 				Calculate the output error
@@ -93,77 +100,80 @@ func (n *NeuralNetwork) Train(input [][]float64, t [][]float64) {
 
 			// We have errorOutput need to calculate gradient
 			// calculate grads for output
-			gradients := MatrixMap(output, n.activationFunc.df)
+			gradients := MatrixMap(output, n.ActivationFunc.DF)
 			gradients.MulMat(errorOutput)
-			gradients.Mul(n.learningRate)
+			gradients.Mul(n.LearningRate)
 
-			// calculate delta for weightsHO
+			// calculate delta for WeightsHO
 			hiddenT := MatrixTranspose(hidden)
-			weightsHODelta, err4 := MatrixProduct(gradients, hiddenT)
+			WeightsHODelta, err4 := MatrixProduct(gradients, hiddenT)
 			if err4 != nil {
 				fmt.Println("Error: ", err4)
 				return
 			}
-			n.weightsHO.AddMat(weightsHODelta) // update the weightsHO
-			n.biasHO.AddMat(gradients)         // updating the bias
+			n.WeightsHO.AddMat(WeightsHODelta) // update the WeightsHO
+			n.BiasHO.AddMat(gradients)         // updating the bias
 
 			/*
 				Calculate hidden error
 				Error = transpose(weightHO)*errorOutput
 			*/
-			weightsHOT := MatrixTranspose(n.weightsHO)
-			errorHidden, err5 := MatrixProduct(weightsHOT, errorOutput)
+			WeightsHOT := MatrixTranspose(n.WeightsHO)
+			errorHidden, err5 := MatrixProduct(WeightsHOT, errorOutput)
 			if err5 != nil {
 				fmt.Println("Error: ", err2)
 				return
 			}
 
 			// calculate hidden gradients
-			hiddenGradient := MatrixMap(hidden, n.activationFunc.df)
+			hiddenGradient := MatrixMap(hidden, n.ActivationFunc.DF)
 			hiddenGradient.MulMat(errorHidden)
-			hiddenGradient.Mul(n.learningRate)
+			hiddenGradient.Mul(n.LearningRate)
 
-			// calculate delta for weightsIH
+			// calculate delta for WeightsIH
 			inputMatrixT := MatrixTranspose(inputMatrix)
-			weightsIHDelta, err6 := MatrixProduct(hiddenGradient, inputMatrixT)
+			WeightsIHDelta, err6 := MatrixProduct(hiddenGradient, inputMatrixT)
 			if err6 != nil {
 				fmt.Println("Error: ", err6)
 				return
 			}
-			n.weightsIH.AddMat(weightsIHDelta) // update the weightsIH
-			n.biasIH.AddMat(hiddenGradient)    // updating the bias
+			n.WeightsIH.AddMat(WeightsIHDelta) // update the WeightsIH
+			n.BiasIH.AddMat(hiddenGradient)    // updating the bias
 		}
 		fmt.Printf("Error = %v\n", errorSum / float64(len(input)))
 	}
 }
 
+// Predict takes 1D array of input data and returns a One-Hot encoded 2D array
 func (n *NeuralNetwork) Predict(input []float64) [][] float64 {
 	inputMatrix := NewColMatrix(input)
 
 	// Calculate value of hidden nodes
-	hidden, err := MatrixProduct(n.weightsIH, inputMatrix)
+	hidden, err := MatrixProduct(n.WeightsIH, inputMatrix)
 	if err != nil {
 		fmt.Println(err)
 		return [][]float64 {}
 	}
-	hidden.Map(n.activationFunc.f)
+	hidden.Map(n.ActivationFunc.F)
 
 	// Calculate values of output nodes
-	output, err2 := MatrixProduct(n.weightsHO, hidden)
+	output, err2 := MatrixProduct(n.WeightsHO, hidden)
 	if err2 != nil {
 		fmt.Println("Error: ", err2)
 		return [][]float64 {}
 	}
-	output.Map(n.activationFunc.f)
+	output.Map(n.ActivationFunc.F)
 	output.Show()
-	return output.val
+	return output.Val
 }
 
+// Mutate takes in a NeuralNetwork and a function of type func (x float64) float64, and returns
+// the mutation of the NeuralNetwork by applying the function to all Matrix in the NeuralNetwork
 func Mutate(n NeuralNetwork, mapping func(x float64) float64) NeuralNetwork {
-	n.weightsIH.Map(mapping)
-	n.weightsHO.Map(mapping)
-	n.biasIH.Map(mapping)
-	n.biasHO.Map(mapping)
+	n.WeightsIH.Map(mapping)
+	n.WeightsHO.Map(mapping)
+	n.BiasIH.Map(mapping)
+	n.BiasHO.Map(mapping)
 	return n
 }
 

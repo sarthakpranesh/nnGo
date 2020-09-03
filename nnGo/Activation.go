@@ -2,29 +2,32 @@ package nnGo
 
 import "math"
 
+// Activation is a simple struct that holds Activation functions for forward progations (F) 
+// and back propagation (DF)
 type Activation struct {
-	f		func(x float64) float64
-	df		func(y float64) float64
+	F		func(x float64) float64
+	DF		func(y float64) float64
 }
 
-// Different activation functions
-func newSigmoid() *Activation {
+// NewSigmoid returns a pointer to an Activation, set to use Sigmoid
+func NewSigmoid() *Activation {
 	return &Activation{
-		f: func(x float64) float64 {
+		F: func(x float64) float64 {
 			return 1 / ( 1 + math.Exp(-x) )
 		},
-		df: func(y float64) float64 {
+		DF: func(y float64) float64 {
 			return y * (1 - y)
 		},
 	}
 }
 
-func newTanh() *Activation {
+// NewTanh returns a pointer to an Activation, set to use Tanh
+func NewTanh() *Activation {
 	return &Activation{
-		f: func(x float64) float64 {
+		F: func(x float64) float64 {
 			return math.Tanh(x)
 		},
-		df: func(y float64) float64 {
+		DF: func(y float64) float64 {
 			return 1 - (y*y)
 		},
 	}

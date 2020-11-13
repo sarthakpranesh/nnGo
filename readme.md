@@ -1,4 +1,4 @@
-# Toy Neural Network
+# nnGo - Neural Network Library
 <p>
     Neural Network library with no dependencies, has it's own Matrix implementation and a 3 layered 
     (input, hidden, output) Dense Network.

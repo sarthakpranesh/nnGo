@@ -3,13 +3,14 @@ package main
 import (
 	"errors"
 	"fmt"
+
 	"github.com/moverest/mnist"
 	"github.com/sarthakpranesh/nnGo/nnGo"
 )
 
 const (
-	Width  = 28
-	Height = 28
+	Width                 = 28
+	Height                = 28
 	TrainingImageFileName = "train-images-idx3-ubyte.gz"
 	TrainingLabelFileName = "train-labels-idx1-ubyte.gz"
 	TestImageFileName     = "t10k-images-idx3-ubyte.gz"
@@ -23,7 +24,7 @@ var (
 	// ErrSize indicates that the labels and images count mismatch.
 	ErrSize = errors.New("mnist: size mismatch")
 
-	trainDataSet [][]float64
+	trainDataSet  [][]float64
 	targetDataSet [][]float64
 )
 
@@ -65,12 +66,12 @@ func main() {
 	}
 
 	// create and train neural network - HELP NEEDED
-	nn := nnGo.NewNN(Width*Height, 10000, 10, 0.001, "sgd", 10)
+	nn := nnGo.NewNN(Width*Height, 10000, 10, 0.001, "sgd", 5)
 	nn.Train(trainDataSet, targetDataSet)
 
 	// testing
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 4; i++ {
+		fmt.Println("Actual: ", targetDataSet[i])
 		nn.Predict(trainDataSet[i])
-		fmt.Println(targetDataSet[i])
 	}
 }

@@ -23,7 +23,7 @@ The `nnGo` folder in this repo holds two files named, Matrix.go and NN.go. Matri
 components that should be their to generate and perform operations on Matrices, where as the NN.go file 
 contains code that utilizes the Matrix implementation to provide a 3 layered fully connected Dense Neural Network.
 
-* Documentation: [pkg.go](https://pkg.go.dev/github.com/sarthakpranesh/nnGo/nnGo)
+* Documentation: [godoc](https://godoc.org/github.com/sarthakpranesh/nnGo)
 
 <br />
  

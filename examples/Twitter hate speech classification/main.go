@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	porter "github.com/reiver/go-porterstemmer"
-	"github.com/sarthakpranesh/nnGo/nnGo"
+	"github.com/sarthakpranesh/nnGo"
 )
 
 // RawData is non processed csv data

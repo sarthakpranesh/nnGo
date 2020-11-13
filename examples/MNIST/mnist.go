@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/moverest/mnist"
-	"github.com/sarthakpranesh/nnGo/nnGo"
+	"github.com/sarthakpranesh/nnGo"
 )
 
 const (

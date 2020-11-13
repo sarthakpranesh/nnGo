@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/sarthakpranesh/nnGo/nnGo"
+	"github.com/sarthakpranesh/nnGo"
 )
 
 var (

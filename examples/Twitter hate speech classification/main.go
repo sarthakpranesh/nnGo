@@ -13,14 +13,14 @@ import (
 
 // RawData is non processed csv data
 type RawData struct {
-	tweets []string
-	hate   []int64
+	Tweets	   []string
+	Category   []int64    // two categories: 0 means not hate speech and 1 is hate speech
 }
 
 // TokenizedData is tokenized data
 type TokenizedData struct {
-	tweets [][]string
-	hate   []int64
+	TokenizedTweets [][]string
+	Category   []int64
 }
 
 var (
@@ -38,47 +38,49 @@ var (
 		"some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too",
 		"very", "s", "t", "can", "will", "just", "don", "should", "now", "@user"}
 	punctuation   = []string{"#", "'", ",", ".", "?", "!"}
-	rawData       RawData
-	tokenizedData TokenizedData
-	positiveDic   = make(map[string]float64)
-	negativeDic   = make(map[string]float64)
 )
 
-// LoadData helps in importing csv data into a RawData type
-func LoadData(name string) error {
+const (
+	testIndex = 814
+)
+
+// LoadCsv helps in importing csv data into a RawData type
+func LoadCsv(name string) (RawData, error) {
 	f, err := os.Open(name)
 	if err != nil {
-		return err
+		return RawData{}, err
 	}
 	defer f.Close()
+
 	lines, err := csv.NewReader(f).ReadAll()
 	if err != nil {
-		return err
+		return RawData{}, err
 	}
-	var tweetslist []string
-	var hatelist []int64
+
+	var Tweets []string
+	var TweetCategory []int64
 	for _, line := range lines {
-		tweetslist = append(tweetslist, line[2])
+		Tweets = append(Tweets, line[0])
 		i, err := strconv.ParseInt(line[1], 10, 64)
 		if err != nil {
 			i = 0
 		}
-		hatelist = append(hatelist, i)
+		TweetCategory = append(TweetCategory, i)
 	}
 
-	rawData = RawData{
-		tweets: tweetslist,
-		hate:   hatelist,
-	}
-
-	return nil
+	return RawData{
+		Tweets: Tweets,
+		Category:   TweetCategory,
+	}, nil
 }
 
-func Tokenize() {
-	tokenizedData = TokenizedData{
-		hate: rawData.hate,
+// Tokenize helps convert the string tweet into a list of words
+func Tokenize(rawData RawData) TokenizedData {
+	tokenizedData := TokenizedData{
+		Category: rawData.Category,
 	}
-	for _, tweet := range rawData.tweets {
+	
+	for _, tweet := range rawData.Tweets {
 		var tokenizedTweet []string
 		for _, word := range strings.Split(tweet, " ") {
 			if strings.Trim(word, " ") == "" {
@@ -87,10 +89,13 @@ func Tokenize() {
 				tokenizedTweet = append(tokenizedTweet, word)
 			}
 		}
-		tokenizedData.tweets = append(tokenizedData.tweets, tokenizedTweet)
+		tokenizedData.TokenizedTweets = append(tokenizedData.TokenizedTweets, tokenizedTweet)
 	}
+
+	return tokenizedData
 }
 
+// contains finds if the string s has any of the substrings present in stopwords
 func contains(s string, stopWords []string) bool {
 	for _, a := range stopWords {
 		if a == s {
@@ -101,9 +106,9 @@ func contains(s string, stopWords []string) bool {
 }
 
 // RemoveStopWords are used to remove any stop words
-func RemoveStopWords() {
+func RemoveStopWords(tokenizedData TokenizedData) TokenizedData {
 	var removedStopWords [][]string
-	for _, tweet := range tokenizedData.tweets {
+	for _, tweet := range tokenizedData.TokenizedTweets {
 		var tweetWithOutStopWords []string
 		for _, word := range tweet {
 			isThere := contains(word, stopWords)
@@ -113,9 +118,12 @@ func RemoveStopWords() {
 		}
 		removedStopWords = append(removedStopWords, tweetWithOutStopWords)
 	}
-	tokenizedData.tweets = removedStopWords
+	tokenizedData.TokenizedTweets = removedStopWords
+
+	return tokenizedData
 }
 
+// cleanPunctuation removes all the punctuations from the string
 func cleanPunctuation(word string, p []string) string {
 	for _, a := range p {
 		word = strings.Replace(word, a, "", -1)
@@ -124,9 +132,9 @@ func cleanPunctuation(word string, p []string) string {
 }
 
 // RemovePun removes all the punctuation defined
-func RemovePun() {
+func RemovePun(tokenizedData TokenizedData) TokenizedData {
 	var removedPunctuations [][]string
-	for _, tweet := range tokenizedData.tweets {
+	for _, tweet := range tokenizedData.TokenizedTweets {
 		var tweetWithOutPun []string
 		for _, word := range tweet {
 			word := cleanPunctuation(word, punctuation)
@@ -134,12 +142,14 @@ func RemovePun() {
 		}
 		removedPunctuations = append(removedPunctuations, tweetWithOutPun)
 	}
-	tokenizedData.tweets = removedPunctuations
+	tokenizedData.TokenizedTweets = removedPunctuations
+
+	return tokenizedData
 }
 
-func StemData() {
+func StemData(tokenizedData TokenizedData) TokenizedData {
 	var stemmedData [][]string
-	for _, tweet := range tokenizedData.tweets {
+	for _, tweet := range tokenizedData.TokenizedTweets {
 		var stemmedTweet []string
 		for _, word := range tweet {
 			word := porter.StemString(word)
@@ -147,17 +157,22 @@ func StemData() {
 		}
 		stemmedData = append(stemmedData, stemmedTweet)
 	}
-	tokenizedData.tweets = stemmedData
+	tokenizedData.TokenizedTweets = stemmedData
+
+	return tokenizedData
 }
 
-func CreateDictionaries() {
-	for i, tweet := range tokenizedData.tweets {
+// CreateDictionaries creates two dictionaries, one for positive (non hate speech) and the other for negative (hate speech)
+func CreateDictionaries(tokenizedData TokenizedData) (map[string]float64, map[string]float64) {
+	positiveDic := make(map[string]float64)
+	negativeDic := make(map[string]float64)
+	for i, tweet := range tokenizedData.TokenizedTweets {
 		for _, word := range tweet {
-			if tokenizedData.hate[i] == 0 {
+			if tokenizedData.Category[i] == 0 {
 				val, _ := positiveDic[word]
 				val = val + 1
 				positiveDic[word] = val
-			} else if tokenizedData.hate[i] == 1 {
+			} else if tokenizedData.Category[i] == 1 {
 				val, _ := negativeDic[word]
 				val = val + 1
 				negativeDic[word] = val
@@ -166,9 +181,12 @@ func CreateDictionaries() {
 			}
 		}
 	}
+
+	return positiveDic, negativeDic
 }
 
-func NormalizeDictionary(dict map[string]float64) {
+// NormalizeDictionary converts the given map into a probabilistic map
+func NormalizeDictionary(dict map[string]float64) map[string]float64 {
 	var max float64
 	for _, v := range dict {
 		if max < v {
@@ -179,11 +197,14 @@ func NormalizeDictionary(dict map[string]float64) {
 	for k, v := range dict {
 		dict[k] = v / max
 	}
+
+	return dict
 }
 
-func GenerateNNData(tData [][]float64, tLabel [][]float64) ([][]float64, [][]float64) {
-	for i, tweet := range tokenizedData.tweets {
-		if tokenizedData.hate[i] == 0 {
+func GenerateNNData(tokenizedData TokenizedData, positiveDic, negativeDic map[string]float64) ([][]float64, [][]float64) {
+	var tData, tLabel [][]float64
+	for i, tweet := range tokenizedData.TokenizedTweets {
+		if tokenizedData.Category[i] == 0 {
 			tLabel = append(tLabel, []float64{1, 0})
 		} else {
 			tLabel = append(tLabel, []float64{0, 1})
@@ -203,41 +224,58 @@ func main() {
 	/*
 		Training Phase
 	*/
-	// This loads the data in :>
-	LoadData("train.csv")
+	// This loads the data in from a csv file:>
+	rawCsvData, err := LoadCsv("tweets.csv")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Tweet:", rawCsvData.Tweets[testIndex], "\tLabel:", rawCsvData.Category[testIndex])
+
 	// Tokenize data
-	Tokenize()
+	tokenizedData := Tokenize(rawCsvData)
+	fmt.Println("Tweet:", tokenizedData.TokenizedTweets[testIndex], "\tLabel:", tokenizedData.Category[testIndex])
+
 	// Removing stop words
-	RemoveStopWords()
+	dataWithNoStopWords := RemoveStopWords(tokenizedData)
+	fmt.Println("Tweet:", dataWithNoStopWords.TokenizedTweets[testIndex], "\tLabel:", dataWithNoStopWords.Category[testIndex])
+
 	// Removing punctuations
-	RemovePun()
+	dataWithNoPunc := RemovePun(dataWithNoStopWords)
+	fmt.Println("Tweet:", dataWithNoPunc.TokenizedTweets[testIndex], "\tLabel:", dataWithNoPunc.Category[testIndex])
+
 	// Stem data
-	StemData()
+	stemedData := StemData(dataWithNoPunc)
+	fmt.Println("Tweet:", stemedData.TokenizedTweets[testIndex], "\tLabel:", stemedData.Category[testIndex])
 
 	// creating dictionary
-	CreateDictionaries()
-	NormalizeDictionary(positiveDic)
-	NormalizeDictionary(negativeDic)
+	positiveDic, negativeDic := CreateDictionaries(stemedData)
+	positiveDic = NormalizeDictionary(positiveDic)
+	negativeDic = NormalizeDictionary(negativeDic)
 	/*
-	* positiveDic - All non hate speech tweets labeled with zero in dataset
-	* negativeDic - All hate speech tweets labeled with one in dataset
+	* positiveDic - All non hate speech tweets labeled with zero in this dictionary
+	* negativeDic - All hate speech tweets labeled with one in this dictionary
 	 */
-	nn := nnGo.NewNN(3, 8, 2, 0.6, "sgd", 20)
-	var TweetData, TweetLabel [][]float64
-	TweetData, TweetLabel = GenerateNNData(TweetData, TweetLabel)
 
-	trainData := TweetData[:30000]
-	trainLabel := TweetLabel[:30000]
+	// create trainable data
+	TweetData, TweetLabel := GenerateNNData(stemedData, positiveDic, negativeDic)
+	fmt.Println("Tweet:", TweetData[testIndex], "\tLabel:", TweetLabel[testIndex])
+
+	trainData := TweetData[:4000]
+	trainLabel := TweetLabel[:4000]
+	testData := TweetData[4000:]
+	testLabel := TweetLabel[4000:]
+
+	// Neural Network Model
+	nn := nnGo.NewNN(3, 100, 2, 0.5, "sgd", 20)
+
 	nn.Train(trainData, trainLabel)
 
-	/*
-		Testing Phase
-	*/
-	testData := TweetData[30000:]
-	testLabel := TweetLabel[30000:]
+	fmt.Println("Actual Encoded Tweet:", testData[21])
+	fmt.Println("Actual:", testLabel[21])
+	nn.Predict(testData[21])
 
-	fmt.Println("Processed Tweet:", tokenizedData.tweets[31948], "\t Tweet Label:", tokenizedData.hate[31948])
-	fmt.Println("Processed Tweet:", TweetData[31948], "\t Tweet Label:", TweetLabel[31948])
-	nn.Predict(testData[1948])
-	fmt.Println(testLabel[1948])
+	fmt.Println("Actual Encoded Tweet:", testData[22])
+	fmt.Println("Actual:", testLabel[22])
+	nn.Predict(testData[22])
 }

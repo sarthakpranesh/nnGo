@@ -2,3 +2,5 @@ github.com/reiver/go-porterstemmer v1.0.1 h1:WyERBkASXgoXrTwq/IQ6wyNj/YG7j/ZURvT
 github.com/reiver/go-porterstemmer v1.0.1/go.mod h1:Z8uL/f/7UEwaeAJNwx1sO8kbqXiEuQieNuD735hLrSU=
 github.com/sarthakpranesh/nnGo v0.0.0-20200906152555-dcf4c8eb7264 h1:5drYjNLlIPdnnmi2oHh3pN9B2sM+b5chYWxkqimvCpk=
 github.com/sarthakpranesh/nnGo v0.0.0-20200906152555-dcf4c8eb7264/go.mod h1:KJcTTwZ3HGEytJ98DpuqFsn3/gdT9xUAJOc3EOH88Us=
+github.com/sarthakpranesh/nnGo v0.2.0 h1:wGv3uEbF37DNci2Q0LKjFdq7wk3spkzr3Y9CtHmdA+w=
+github.com/sarthakpranesh/nnGo v0.2.0/go.mod h1:ZWIjLdNTDbIbQVpwGBoxq9bUu5waZSWwJZ6eq3qfClc=
